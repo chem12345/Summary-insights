@@ -1,0 +1,8 @@
+fastapi==0.103.1
+nest_asyncio==1.5.6
+pandas==1.5.3
+pyngrok==7.0.0
+pyodbc==4.0.34
+scipy==1.10.1
+statsmodels==0.14.0
+uvicorn==0.23.2
