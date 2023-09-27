@@ -1,0 +1,37 @@
+name: Run Python Script
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install SQL Server ODBC Driver
+        run: |
+          # Install SQL Server ODBC driver here
+          # For example, you can use the following commands to install it on an Ubuntu-based runner:
+          sudo apt-get update
+          sudo apt-get install -y unixodbc unixodbc-dev
+          sudo apt-get install -y odbcinst
+          sudo apt-get install -y freetds-dev
+          sudo apt-get install -y freetds-bin
+          
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.11
+
+      - name: Install Python Dependencies
+        run: |
+          # Install Python packages, including pyodbc, as needed
+          pip install -r requirements.txt
+
+      - name: Run Python Script
+        run: python full_automation.py
