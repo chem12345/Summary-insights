@@ -23,7 +23,15 @@ jobs:
       - name: Configure SQL Server ODBC Driver (FreeTDS)
         run: |
           echo "[SQL Server]\nDescription = FreeTDS Driver\nDriver = /usr/lib/x86_64-linux-gnu/odbc/libtdsodbc.so" | sudo tee -a /etc/odbcinst.ini
-
+      - name: Validate Driver Path
+        run: |
+          if [ -f "/usr/lib/x86_64-linux-gnu/odbc/libtdsodbc.so" ]; then
+            echo "Driver file exists at the expected location."
+          else
+            echo "Driver file does not exist at the expected location!"
+            # Optionally, search for it to determine its actual path:
+            find /usr -name libtdsodbc.so
+          fi
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
