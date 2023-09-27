@@ -13,22 +13,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Install SQL Server ODBC Driver
+      - name: Install SQL Server ODBC Driver (FreeTDS)
         run: |
           sudo apt-get update
           sudo apt-get install -y unixodbc unixodbc-dev
           sudo apt-get install -y odbcinst
-          sudo apt-get install -y freetds-dev
-          sudo apt-get install -y freetds-bin
-          # Install Microsoft ODBC Driver for SQL Server
-          sudo su -c "bash -c 'echo \"deb [arch=amd64] https://packages.microsoft.com/ubuntu/20.04/prod focal main\" > /etc/apt/sources.list.d/mssql-release.list'"
-          sudo apt-get update
-          sudo ACCEPT_EULA=Y apt-get install -y msodbcsql17
+          sudo apt-get install -y tdsodbc freetds-dev freetds-bin
 
-      - name: List ODBC Drivers
+      - name: Configure SQL Server ODBC Driver (FreeTDS)
         run: |
-          odbcinst -j
-          odbcinst -q -d
+          echo "[SQL Server]\nDescription = FreeTDS Driver\nDriver = /usr/lib/x86_64-linux-gnu/odbc/libtdsodbc.so" | sudo tee -a /etc/odbcinst.ini
 
       - name: Set up Python
         uses: actions/setup-python@v2
@@ -41,7 +35,8 @@ jobs:
 
       - name: Run Python Script
         env:
-          DB_SERVER: ${{ secrets.DB_SERVER }}
-          DB_USERNAME: ${{ secrets.DB_USERNAME }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_SERVER: 'TECH-99'
+          DB_USERNAME: 'sa'
+          DB_PASSWORD: '123456'
+          DB_NAME: 'chem_prod_copy'
         run: python full_automation.py
